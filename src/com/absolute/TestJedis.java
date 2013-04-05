@@ -60,6 +60,11 @@ public class TestJedis {
 			Set<String> groupIDKeys = groupIDMap.keySet();
 			for(String groupIDs:groupIDKeys){
 				System.out.println("groupID:"+groupIDs+" numvwDDDGroups:"+groupIDMap.get(groupIDs));
+				//store in redis
+				List<String> groupIDList = groupIDMap.get(groupIDs);
+				for(String str:groupIDList){
+					jedis.rpush(groupIDs,str);
+				}
 			}
 			//store the hm in redis. 
 			
@@ -76,7 +81,10 @@ public class TestJedis {
 			
 			System.out.println("groupID 555:"+groupIDMap.get("555"));
 			//do we need to push the lists into  redis? 
-			
+			System.out.println(jedis.llen("555"));
+			for(int i=0;i<jedis.llen("555");i++){
+				System.out.println(jedis.rpop("555"));
+			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}
